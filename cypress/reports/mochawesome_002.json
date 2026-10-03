@@ -1,0 +1,150 @@
+{
+  "stats": {
+    "suites": 2,
+    "tests": 2,
+    "passes": 1,
+    "pending": 0,
+    "failures": 1,
+    "start": "2026-10-03T09:14:00.500Z",
+    "end": "2026-10-03T09:14:08.943Z",
+    "duration": 8443,
+    "testsRegistered": 2,
+    "passPercent": 50,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "f447bb71-8bf0-497d-a15a-3b966d5e2d5d",
+      "title": "",
+      "fullFile": "cypress\\e2e\\spec.cy.js",
+      "file": "cypress\\e2e\\spec.cy.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "2c88b84b-bd08-435d-992e-3970d25a7820",
+          "title": "template spec",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "passes",
+              "fullTitle": "template spec passes",
+              "timedOut": null,
+              "duration": 868,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.visit('https://example.cypress.io');",
+              "err": {},
+              "uuid": "78d30f50-a039-4bdf-a3e8-5e878c295551",
+              "parentUUID": "2c88b84b-bd08-435d-992e-3970d25a7820",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "78d30f50-a039-4bdf-a3e8-5e878c295551"
+          ],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 868,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        },
+        {
+          "uuid": "546c77c9-8c4c-4b82-a3bc-d7de57ecfe98",
+          "title": "30-Field Multi-Page Registration Flow",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "Fills out all 30 fields across 4 pages and verifies step 5 dashboard",
+              "fullTitle": "30-Field Multi-Page Registration Flow Fills out all 30 fields across 4 pages and verifies step 5 dashboard",
+              "timedOut": null,
+              "duration": 5040,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": null,
+              "code": "// Intercept Mock API Endpoint\ncy.intercept('POST', '/api/v1/register', {\n  statusCode: 200,\n  body: {\n    status: 'SUCCESS',\n    message: 'Registration Recorded!'\n  }\n}).as('postRegister');\n// PAGE 1\ncy.get('[data-cy=\"page-title-1\"]').should('be.visible');\ncy.get('[data-cy=\"input-first-name\"]').type('Sarah');\ncy.get('[data-cy=\"input-middle-name\"]').type('Louise');\ncy.get('[data-cy=\"input-last-name\"]').type('Connor');\ncy.get('[data-cy=\"input-email\"]').type('sarah.connor@cyberdyne.com');\ncy.get('[data-cy=\"input-phone\"]').type('+15550192834');\ncy.get('[data-cy=\"input-dob\"]').type('1990-05-12');\ncy.get('[data-cy=\"input-gender-female\"]').check();\ncy.get('[data-cy=\"select-nationality\"]').select('US');\ncy.get('[data-cy=\"input-national-id\"]').type('ID-8839201');\ncy.get('[data-cy=\"btn-next-1\"]').click();\n// PAGE 2\ncy.get('[data-cy=\"page-title-2\"]').should('be.visible');\ncy.get('[data-cy=\"input-username\"]').type('sconnor90');\ncy.get('[data-cy=\"input-password\"]').type('Skynet2029!');\ncy.get('[data-cy=\"input-confirm-password\"]').type('Skynet2029!');\ncy.get('[data-cy=\"select-security-question\"]').select('pet');\ncy.get('[data-cy=\"input-security-answer\"]').type('Max');\ncy.get('[data-cy=\"checkbox-2fa\"]').check();\ncy.get('[data-cy=\"btn-next-2\"]').click();\n// PAGE 3\ncy.get('[data-cy=\"page-title-3\"]').should('be.visible');\ncy.get('[data-cy=\"input-street1\"]').type('742 Evergreen Terrace');\ncy.get('[data-cy=\"input-stareet2\"]').type('Apt 4B');\ncy.get('[data-cy=\"input-city\"]').type('Springfield');\ncy.get('[data-cy=\"input-state\"]').type('OR');\ncy.get('[data-cy=\"input-postal-code\"]').type('97477');\ncy.get('[data-cy=\"select-country\"]').select('US');\ncy.get('[data-cy=\"btn-next-3\"]').click();\n// PAGE 4\ncy.get('[data-cy=\"page-title-4\"]').should('be.visible');\ncy.get('[data-cy=\"input-occupation\"]').type('Security Specialist');\ncy.get('[data-cy=\"input-company\"]').type('Resistance Inc');\ncy.get('[data-cy=\"input-experience\"]').type('10');\ncy.get('[data-cy=\"input-annual-income\"]').type('120000');\ncy.get('[data-cy=\"select-currency\"]').select('USD');\ncy.get('[data-cy=\"input-range-skill\"]').invoke('val', 9).trigger('change');\ncy.get('[data-cy=\"textarea-bio\"]').type('Preparing automated Cypress test cases.');\ncy.get('[data-cy=\"checkbox-terms\"]').check();\ncy.get('[data-cy=\"btn-next-4\"]').click();\n// PAGE 5 SUMMARY & SUBMISSION\ncy.get('[data-cy=\"page-title-5\"]').should('be.visible');\ncy.get('[data-cy=\"summary-first-name\"]').should('contain', 'Sarah');\ncy.get('[data-cy=\"summary-email\"]').should('contain', 'sarah.connor@cyberdyne.com');\ncy.get('[data-cy=\"summary-2fa\"]').should('contain', 'Yes');\n// Click Final Submit\ncy.get('[data-cy=\"btn-submit-final\"]').click();\n// Verify Intercepted Network Payload\ncy.wait('@postRegister').then(interception => {\n  expect(interception.request.body.username).to.equal('sconnor90');\n  expect(interception.request.body.country).to.equal('US');\n});\ncy.get('[data-cy=\"api-result-box\"]').should('contain', 'Registration Recorded!');",
+              "err": {
+                "message": "AssertionError: Timed out retrying after 4000ms: Expected to find element: `[data-cy=\"page-title-1\"]`, but never found it.",
+                "estack": "AssertionError: Timed out retrying after 4000ms: Expected to find element: `[data-cy=\"page-title-1\"]`, but never found it.\n    at Context.eval (webpack://user-data-testing-system/./cypress/e2e/spec.cy.js:23:43)",
+                "diff": null
+              },
+              "uuid": "5a6c0b70-f30f-4651-aa31-951545fd7ea3",
+              "parentUUID": "546c77c9-8c4c-4b82-a3bc-d7de57ecfe98",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [],
+          "failures": [
+            "5a6c0b70-f30f-4651-aa31-951545fd7ea3"
+          ],
+          "pending": [],
+          "skipped": [],
+          "duration": 5040,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "7.2.0"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": true,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "8.1.1"
+    },
+    "marge": {
+      "options": {
+        "reportDir": "cypress/reports",
+        "overwrite": false,
+        "html": true,
+        "json": true,
+        "charts": true,
+        "reportPageTitle": "Assignment 1 - Cypress Test Report"
+      },
+      "version": "6.3.2"
+    }
+  }
+}

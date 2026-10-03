@@ -1,0 +1,150 @@
+{
+  "stats": {
+    "suites": 2,
+    "tests": 2,
+    "passes": 1,
+    "pending": 0,
+    "failures": 1,
+    "start": "2026-10-03T09:14:10.431Z",
+    "end": "2026-10-03T09:14:17.269Z",
+    "duration": 6838,
+    "testsRegistered": 2,
+    "passPercent": 50,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "622e5bb7-3e81-436a-85fb-0b276f875303",
+      "title": "",
+      "fullFile": "cypress\\e2e\\spec2.cy.js",
+      "file": "cypress\\e2e\\spec2.cy.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "b18a9d38-b9bf-46ba-83e6-25ac8d4c9fa9",
+          "title": "Registration Form Spec",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "passes",
+              "fullTitle": "Registration Form Spec passes",
+              "timedOut": null,
+              "duration": 200,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.visit('http://localhost:3000');",
+              "err": {},
+              "uuid": "97fe94c3-4ea1-41f1-8803-38a3af063c41",
+              "parentUUID": "b18a9d38-b9bf-46ba-83e6-25ac8d4c9fa9",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "97fe94c3-4ea1-41f1-8803-38a3af063c41"
+          ],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 200,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        },
+        {
+          "uuid": "c2a87752-02e7-4413-b179-ed543ff4920f",
+          "title": "Registration Form Validation Spec",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "should show an error if First Name contains numbers",
+              "fullTitle": "Registration Form Validation Spec should show an error if First Name contains numbers",
+              "timedOut": null,
+              "duration": 5251,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": null,
+              "code": "// 1. Type numbers into the First Name field\ncy.get('[data-cy=\"input-first-name\"]').type('John123');\n// 2. Fill in other required fields\ncy.get('[data-cy=\"input-last-name\"]').type('Doe');\ncy.get('[data-cy=\"input-email\"]').type('john@example.com');\n// 3. Go to final step and click Submit Application\ncy.get('[data-cy=\"btn-next-1\"]').click();\ncy.get('[data-cy=\"btn-next-2\"]').click();\ncy.get('[data-cy=\"btn-next-3\"]').click();\ncy.get('[data-cy=\"checkbox-terms\"]').check();\ncy.get('[data-cy=\"btn-next-4\"]').click();\ncy.get('[data-cy=\"btn-submit-final\"]').click();\n// 4. Verify the system redirects back to Step 1 and shows the error message\ncy.get('[data-cy=\"page-title-1\"]').should('be.visible');\ncy.get('[data-cy=\"err-first-name\"]').should('be.visible');",
+              "err": {
+                "message": "AssertionError: Timed out retrying after 4000ms: Expected to find element: `[data-cy=\"input-first-name\"]`, but never found it.",
+                "estack": "AssertionError: Timed out retrying after 4000ms: Expected to find element: `[data-cy=\"input-first-name\"]`, but never found it.\n    at Context.eval (webpack://user-data-testing-system/./cypress/e2e/spec2.cy.js:16:11)",
+                "diff": null
+              },
+              "uuid": "86d0e64f-b609-4f64-8b72-8bf3b398d947",
+              "parentUUID": "c2a87752-02e7-4413-b179-ed543ff4920f",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [],
+          "failures": [
+            "86d0e64f-b609-4f64-8b72-8bf3b398d947"
+          ],
+          "pending": [],
+          "skipped": [],
+          "duration": 5251,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "7.2.0"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": true,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "8.1.1"
+    },
+    "marge": {
+      "options": {
+        "reportDir": "cypress/reports",
+        "overwrite": false,
+        "html": true,
+        "json": true,
+        "charts": true,
+        "reportPageTitle": "Assignment 1 - Cypress Test Report"
+      },
+      "version": "6.3.2"
+    }
+  }
+}

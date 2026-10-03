@@ -1,0 +1,111 @@
+{
+  "stats": {
+    "suites": 1,
+    "tests": 1,
+    "passes": 0,
+    "pending": 0,
+    "failures": 1,
+    "start": "2026-10-03T09:14:18.752Z",
+    "end": "2026-10-03T09:14:26.423Z",
+    "duration": 7671,
+    "testsRegistered": 1,
+    "passPercent": 0,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "50446088-d197-482f-920e-a70d9d3bffbc",
+      "title": "",
+      "fullFile": "cypress\\e2e\\submission_error.cy.js",
+      "file": "cypress\\e2e\\submission_error.cy.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "3ae14157-4a61-466d-8b22-6d05a7bdb8fc",
+          "title": "Employee Registration - Submission Error Test",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "should detect when form submission fails and shows the error box",
+              "fullTitle": "Employee Registration - Submission Error Test should detect when form submission fails and shows the error box",
+              "timedOut": null,
+              "duration": 6331,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": null,
+              "code": "// --- STEP 1: Personal Details ---\ncy.get('[data-cy=\"input-first-name\"]').type('Sarah');\ncy.get('[data-cy=\"input-last-name\"]').type('Connor');\ncy.get('[data-cy=\"input-email\"]').type('sarah@example.com');\ncy.get('[data-cy=\"btn-next-1\"]').click();\n// --- STEP 2: Security Credentials ---\ncy.get('[data-cy=\"input-password\"]').type('Password123!');\ncy.get('[data-cy=\"input-confirm-password\"]').type('Password123!');\ncy.get('[data-cy=\"btn-next-2\"]').click();\n// --- STEP 3: Address ---\ncy.get('[data-cy=\"input-street1\"]').type('123 Main Street');\ncy.get('[data-cy=\"btn-next-3\"]').click();\n// --- STEP 4: Profile & Terms ---\ncy.get('[data-cy=\"checkbox-terms\"]').check();\ncy.get('[data-cy=\"btn-next-4\"]').click();\n// --- STEP 5: Review & Submit ---\n// Click the final submit button\ncy.get('[data-cy=\"btn-submit-final\"]').click();\n// DETECT THE ERROR:\n// Assert that the result box is visible and displays the failure message\ncy.get('[data-cy=\"api-result-box\"]').should('be.visible').and('have.class', 'failure').and('contain.text', 'Submission failed');",
+              "err": {
+                "message": "AssertionError: Timed out retrying after 4000ms: expected '<div#status-message.success>' to have class 'failure'",
+                "estack": "AssertionError: Timed out retrying after 4000ms: expected '<div#status-message.success>' to have class 'failure'\n    at Context.eval (webpack://user-data-testing-system/./cypress/e2e/submission_error.cy.js:40:13)",
+                "diff": null
+              },
+              "uuid": "0dc27162-e194-48b7-9cf1-f322186f6607",
+              "parentUUID": "3ae14157-4a61-466d-8b22-6d05a7bdb8fc",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [],
+          "failures": [
+            "0dc27162-e194-48b7-9cf1-f322186f6607"
+          ],
+          "pending": [],
+          "skipped": [],
+          "duration": 6331,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "7.2.0"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": true,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "8.1.1"
+    },
+    "marge": {
+      "options": {
+        "reportDir": "cypress/reports",
+        "overwrite": false,
+        "html": true,
+        "json": true,
+        "charts": true,
+        "reportPageTitle": "Assignment 1 - Cypress Test Report"
+      },
+      "version": "6.3.2"
+    }
+  }
+}

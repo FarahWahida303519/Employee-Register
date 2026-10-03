@@ -1,0 +1,157 @@
+{
+  "stats": {
+    "suites": 1,
+    "tests": 3,
+    "passes": 0,
+    "pending": 0,
+    "failures": 3,
+    "start": "2026-10-03T09:13:45.879Z",
+    "end": "2026-10-03T09:13:59.097Z",
+    "duration": 13218,
+    "testsRegistered": 3,
+    "passPercent": 0,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "186d66b2-2f88-4f15-96be-7c493d3a6d1c",
+      "title": "",
+      "fullFile": "cypress\\e2e\\multi_page_form.cy.js",
+      "file": "cypress\\e2e\\multi_page_form.cy.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "54fa0351-7964-494f-9fb9-e7ea06c990fd",
+          "title": "Multi-Step Registration Form",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "should complete the entire multi-step form successfully (Happy Path)",
+              "fullTitle": "Multi-Step Registration Form should complete the entire multi-step form successfully (Happy Path)",
+              "timedOut": null,
+              "duration": 4620,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": null,
+              "code": "// --- STEP 1: Personal Information ---\ncy.get('[data-cy=\"page-title-1\"]').should('be.visible');\ncy.get('[data-cy=\"input-first-name\"]').type('John');\ncy.get('[data-cy=\"input-middle-name\"]').type('A.');\ncy.get('[data-cy=\"input-last-name\"]').type('Doe');\ncy.get('[data-cy=\"input-email\"]').type('john.doe@example.com');\ncy.get('[data-cy=\"input-phone\"]').type('+1234567890');\ncy.get('[data-cy=\"input-dob\"]').type('1995-05-15');\ncy.get('[data-cy=\"input-gender-male\"]').check();\ncy.get('[data-cy=\"select-nationality\"]').select('US');\ncy.get('[data-cy=\"input-national-id\"]').type('NAT-998877');\ncy.get('[data-cy=\"btn-next-1\"]').click();\n// --- STEP 2: Account Credentials ---\ncy.get('[data-cy=\"page-title-2\"]').should('be.visible');\ncy.get('[data-cy=\"input-username\"]').type('johndoe95');\ncy.get('[data-cy=\"input-password\"]').type('SecretPass123!');\ncy.get('[data-cy=\"input-confirm-password\"]').type('SecretPass123!');\ncy.get('[data-cy=\"select-security-question\"]').select('pet');\ncy.get('[data-cy=\"input-security-answer\"]').type('Fluffy');\ncy.get('[data-cy=\"checkbox-2fa\"]').check();\ncy.get('[data-cy=\"btn-next-2\"]').click();\n// --- STEP 3: Address Details ---\ncy.get('[data-cy=\"page-title-3\"]').should('be.visible');\ncy.get('[data-cy=\"input-street1\"]').type('123 Main Street');\ncy.get('[data-cy=\"input-city\"]').type('New York');\ncy.get('[data-cy=\"input-state\"]').type('NY');\ncy.get('[data-cy=\"input-postal-code\"]').type('10001');\ncy.get('[data-cy=\"select-country\"]').select('US');\ncy.get('[data-cy=\"btn-next-3\"]').click();\n// --- STEP 4: Preferences & Profile ---\ncy.get('[data-cy=\"page-title-4\"]').should('be.visible');\ncy.get('[data-cy=\"input-occupation\"]').type('Developer');\ncy.get('[data-cy=\"input-company\"]').type('Tech Corp');\ncy.get('[data-cy=\"input-experience\"]').type('5');\ncy.get('[data-cy=\"input-annual-income\"]').type('85000');\ncy.get('[data-cy=\"select-currency\"]').select('USD');\ncy.get('[data-cy=\"textarea-bio\"]').type('Full-stack JavaScript developer.');\ncy.get('[data-cy=\"checkbox-terms\"]').check();\ncy.get('[data-cy=\"btn-next-4\"]').click();\n// --- STEP 5: Review & Submit ---\ncy.get('[data-cy=\"page-title-5\"]').should('be.visible');\n// Verify summary details match input\ncy.get('[data-cy=\"summary-first-name\"]').should('have.text', 'John');\ncy.get('[data-cy=\"summary-email\"]').should('have.text', 'john.doe@example.com');\ncy.get('[data-cy=\"summary-2fa\"]').should('have.text', 'Yes');\n// Submit form\ncy.get('[data-cy=\"btn-submit-final\"]').click();\n// Wait for mocked API call and check status message\ncy.wait('@registerUser');\ncy.get('[data-cy=\"api-result-box\"]').should('be.visible').and('have.class', 'success').and('contain.text', 'Registration successful (User ID: USER-12345)');",
+              "err": {
+                "message": "AssertionError: Timed out retrying after 4000ms: Expected to find element: `[data-cy=\"page-title-1\"]`, but never found it.",
+                "estack": "AssertionError: Timed out retrying after 4000ms: Expected to find element: `[data-cy=\"page-title-1\"]`, but never found it.\n    at Context.eval (webpack://user-data-testing-system/./cypress/e2e/multi_page_form.cy.js:18:43)",
+                "diff": null
+              },
+              "uuid": "41d16f73-18b3-489c-9b1b-826a191acf09",
+              "parentUUID": "54fa0351-7964-494f-9fb9-e7ea06c990fd",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "should show validation errors when required fields are missing",
+              "fullTitle": "Multi-Step Registration Form should show validation errors when required fields are missing",
+              "timedOut": null,
+              "duration": 4252,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": null,
+              "code": "// Navigate to step 5 directly\ncy.get('[data-cy=\"btn-next-1\"]').click();\ncy.get('[data-cy=\"btn-next-2\"]').click();\ncy.get('[data-cy=\"btn-next-3\"]').click();\ncy.get('[data-cy=\"btn-next-4\"]').click();\n// Submit blank form\ncy.get('[data-cy=\"btn-submit-final\"]').click();\n// Verify failure message box\ncy.get('[data-cy=\"api-result-box\"]').should('be.visible').and('have.class', 'failure').and('contain.text', 'Validation Error');\n// Should auto-redirect back to Step 1 because first name/last name are missing\ncy.get('[data-cy=\"page-title-1\"]').should('be.visible');\ncy.get('[data-cy=\"err-first-name\"]').should('be.visible');\ncy.get('[data-cy=\"err-last-name\"]').should('be.visible');\ncy.get('[data-cy=\"err-email\"]').should('be.visible');",
+              "err": {
+                "message": "AssertionError: Timed out retrying after 4000ms: Expected to find element: `[data-cy=\"btn-next-1\"]`, but never found it.",
+                "estack": "AssertionError: Timed out retrying after 4000ms: Expected to find element: `[data-cy=\"btn-next-1\"]`, but never found it.\n    at Context.eval (webpack://user-data-testing-system/./cypress/e2e/multi_page_form.cy.js:81:11)",
+                "diff": null
+              },
+              "uuid": "28aa38db-af7c-444f-a646-5376868c1c85",
+              "parentUUID": "54fa0351-7964-494f-9fb9-e7ea06c990fd",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "should validate password matching",
+              "fullTitle": "Multi-Step Registration Form should validate password matching",
+              "timedOut": null,
+              "duration": 4242,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": null,
+              "code": "// Step 1\ncy.get('[data-cy=\"input-first-name\"]').type('Alice');\ncy.get('[data-cy=\"input-last-name\"]').type('Smith');\ncy.get('[data-cy=\"input-email\"]').type('alice@example.com');\ncy.get('[data-cy=\"btn-next-1\"]').click();\n// Step 2 with mismatched passwords\ncy.get('[data-cy=\"input-password\"]').type('Password123');\ncy.get('[data-cy=\"input-confirm-password\"]').type('WrongPassword');\ncy.get('[data-cy=\"btn-next-2\"]').click();\ncy.get('[data-cy=\"btn-next-3\"]').click();\ncy.get('[data-cy=\"checkbox-terms\"]').check();\ncy.get('[data-cy=\"btn-next-4\"]').click();\ncy.get('[data-cy=\"btn-submit-final\"]').click();\n// Should redirect back to Step 2 for password mismatch\ncy.get('[data-cy=\"page-title-2\"]').should('be.visible');\ncy.get('[data-cy=\"err-confirm-password\"]').should('be.visible');",
+              "err": {
+                "message": "AssertionError: Timed out retrying after 4000ms: Expected to find element: `[data-cy=\"input-first-name\"]`, but never found it.",
+                "estack": "AssertionError: Timed out retrying after 4000ms: Expected to find element: `[data-cy=\"input-first-name\"]`, but never found it.\n    at Context.eval (webpack://user-data-testing-system/./cypress/e2e/multi_page_form.cy.js:104:11)",
+                "diff": null
+              },
+              "uuid": "f1a75138-3c45-4d6c-a3e3-bef05d4b6540",
+              "parentUUID": "54fa0351-7964-494f-9fb9-e7ea06c990fd",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [],
+          "failures": [
+            "41d16f73-18b3-489c-9b1b-826a191acf09",
+            "28aa38db-af7c-444f-a646-5376868c1c85",
+            "f1a75138-3c45-4d6c-a3e3-bef05d4b6540"
+          ],
+          "pending": [],
+          "skipped": [],
+          "duration": 13114,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "7.2.0"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": true,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "8.1.1"
+    },
+    "marge": {
+      "options": {
+        "reportDir": "cypress/reports",
+        "overwrite": false,
+        "html": true,
+        "json": true,
+        "charts": true,
+        "reportPageTitle": "Assignment 1 - Cypress Test Report"
+      },
+      "version": "6.3.2"
+    }
+  }
+}

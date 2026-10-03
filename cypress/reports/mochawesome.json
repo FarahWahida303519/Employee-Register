@@ -1,0 +1,221 @@
+{
+  "stats": {
+    "suites": 1,
+    "tests": 7,
+    "passes": 7,
+    "pending": 0,
+    "failures": 0,
+    "start": "2026-10-03T09:13:33.126Z",
+    "end": "2026-10-03T09:13:44.355Z",
+    "duration": 11229,
+    "testsRegistered": 7,
+    "passPercent": 100,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "d85432ed-463f-4806-89be-282fc946f4a6",
+      "title": "",
+      "fullFile": "cypress\\e2e\\error_detection.cy.js",
+      "file": "cypress\\e2e\\error_detection.cy.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "0bd9d791-98f4-4fa5-bf91-039fcf104394",
+          "title": "Assignment 1: Comprehensive Error Detection & Validation Suite",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "TEST 1: Should detect error and redirect to Step 1 if First Name contains numbers",
+              "fullTitle": "Assignment 1: Comprehensive Error Detection & Validation Suite TEST 1: Should detect error and redirect to Step 1 if First Name contains numbers",
+              "timedOut": null,
+              "duration": 2430,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.visit('http://localhost:3000/index.html');\n// Step 1: Intentionally type numbers into First Name\ncy.get('[data-cy=\"input-first-name\"]').type('Sarah123'); // <-- INVALID (contains digits)\ncy.get('[data-cy=\"input-last-name\"]').type('Connor');\ncy.get('[data-cy=\"input-email\"]').type('sarah.connor@nexcorp.com');\ncy.get('[data-cy=\"btn-next-1\"]').click();\n// Step 2: Valid credentials\ncy.get('[data-cy=\"input-password\"]').type('SecurePass123!');\ncy.get('[data-cy=\"input-confirm-password\"]').type('SecurePass123!');\ncy.get('[data-cy=\"btn-next-2\"]').click();\n// Step 3: Address\ncy.get('[data-cy=\"input-street1\"]').type('742 Evergreen Terrace');\ncy.get('[data-cy=\"btn-next-3\"]').click();\n// Step 4: Role & Terms\ncy.get('[data-cy=\"checkbox-terms\"]').check();\ncy.get('[data-cy=\"btn-next-4\"]').click();\n// Step 5: Click Submit\ncy.get('[data-cy=\"btn-submit-final\"]').click();\n// ASSERTIONS FOR ERROR DETECTION:\n// 1. System must block submission and redirect back to Step 1\ncy.get('[data-cy=\"page-title-1\"]').should('be.visible');\n// 2. Specific First Name error message must become visible\ncy.get('[data-cy=\"err-first-name\"]').should('be.visible').and('contain.text', 'First name is required and cannot contain numbers');\n// 3. Status box must indicate validation failure\ncy.get('[data-cy=\"api-result-box\"]').should('be.visible').and('have.class', 'failure').and('contain.text', 'Validation Error');",
+              "err": {},
+              "uuid": "7d6d8932-3404-4265-afd0-6524b8cbc811",
+              "parentUUID": "0bd9d791-98f4-4fa5-bf91-039fcf104394",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "TEST 2: Should detect error if Last Name contains numbers",
+              "fullTitle": "Assignment 1: Comprehensive Error Detection & Validation Suite TEST 2: Should detect error if Last Name contains numbers",
+              "timedOut": null,
+              "duration": 1249,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.visit('http://localhost:3000/index.html');\n// Step 1: Valid first name, but Last Name has numbers\ncy.get('[data-cy=\"input-first-name\"]').type('Sarah');\ncy.get('[data-cy=\"input-last-name\"]').type('Connor99'); // <-- INVALID\ncy.get('[data-cy=\"input-email\"]').type('sarah.connor@nexcorp.com');\ncy.get('[data-cy=\"btn-next-1\"]').click();\n// Fill remaining steps\ncy.get('[data-cy=\"input-password\"]').type('SecurePass123!');\ncy.get('[data-cy=\"input-confirm-password\"]').type('SecurePass123!');\ncy.get('[data-cy=\"btn-next-2\"]').click();\ncy.get('[data-cy=\"btn-next-3\"]').click();\ncy.get('[data-cy=\"checkbox-terms\"]').check();\ncy.get('[data-cy=\"btn-next-4\"]').click();\n// Submit\ncy.get('[data-cy=\"btn-submit-final\"]').click();\n// ASSERTIONS:\ncy.get('[data-cy=\"page-title-1\"]').should('be.visible');\ncy.get('[data-cy=\"err-last-name\"]').should('be.visible').and('contain.text', 'Last name is required and cannot contain numbers');",
+              "err": {},
+              "uuid": "c8dcb939-4133-4b45-b580-6c5183d70f89",
+              "parentUUID": "0bd9d791-98f4-4fa5-bf91-039fcf104394",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "TEST 3: Should detect error if Email format is missing \"@\"",
+              "fullTitle": "Assignment 1: Comprehensive Error Detection & Validation Suite TEST 3: Should detect error if Email format is missing \"@\"",
+              "timedOut": null,
+              "duration": 1216,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.visit('http://localhost:3000/index.html');\n// Step 1: Invalid email without @\ncy.get('[data-cy=\"input-first-name\"]').type('Sarah');\ncy.get('[data-cy=\"input-last-name\"]').type('Connor');\ncy.get('[data-cy=\"input-email\"]').type('sarahconnor_at_nexcorp.com'); // <-- INVALID\ncy.get('[data-cy=\"btn-next-1\"]').click();\n// Fill required credentials\ncy.get('[data-cy=\"input-password\"]').type('SecurePass123!');\ncy.get('[data-cy=\"input-confirm-password\"]').type('SecurePass123!');\ncy.get('[data-cy=\"btn-next-2\"]').click();\ncy.get('[data-cy=\"btn-next-3\"]').click();\ncy.get('[data-cy=\"checkbox-terms\"]').check();\ncy.get('[data-cy=\"btn-next-4\"]').click();\n// Submit\ncy.get('[data-cy=\"btn-submit-final\"]').click();\n// ASSERTIONS:\ncy.get('[data-cy=\"page-title-1\"]').should('be.visible');\ncy.get('[data-cy=\"err-email\"]').should('be.visible').and('contain.text', 'Valid corporate email is required');",
+              "err": {},
+              "uuid": "58540506-8340-4ab7-9607-03a401aedeb9",
+              "parentUUID": "0bd9d791-98f4-4fa5-bf91-039fcf104394",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "TEST 4: Should detect error and redirect to Step 2 if passwords do not match",
+              "fullTitle": "Assignment 1: Comprehensive Error Detection & Validation Suite TEST 4: Should detect error and redirect to Step 2 if passwords do not match",
+              "timedOut": null,
+              "duration": 1235,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.visit('http://localhost:3000/index.html');\n// Step 1: Valid personal details\ncy.get('[data-cy=\"input-first-name\"]').type('Sarah');\ncy.get('[data-cy=\"input-last-name\"]').type('Connor');\ncy.get('[data-cy=\"input-email\"]').type('sarah.connor@nexcorp.com');\ncy.get('[data-cy=\"btn-next-1\"]').click();\n// Step 2: Mismatched passwords\ncy.get('[data-cy=\"input-password\"]').type('CorrectPassword123!');\ncy.get('[data-cy=\"input-confirm-password\"]').type('DifferentPassword999!'); // <-- MISMATCH\ncy.get('[data-cy=\"btn-next-2\"]').click();\n// Advance to submit\ncy.get('[data-cy=\"btn-next-3\"]').click();\ncy.get('[data-cy=\"checkbox-terms\"]').check();\ncy.get('[data-cy=\"btn-next-4\"]').click();\n// Submit\ncy.get('[data-cy=\"btn-submit-final\"]').click();\n// ASSERTIONS:\n// 1. Should redirect user back to Step 2 (Account Credentials)\ncy.get('[data-cy=\"page-title-2\"]').should('be.visible');\n// 2. Error message for password mismatch must be visible\ncy.get('[data-cy=\"err-confirm-password\"]').should('be.visible').and('contain.text', 'Passwords must match and cannot be empty');",
+              "err": {},
+              "uuid": "62e4373c-bcb2-462b-9bff-4da9b5029420",
+              "parentUUID": "0bd9d791-98f4-4fa5-bf91-039fcf104394",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "TEST 5: Should detect error and redirect to Step 4 if Terms & Conditions are not checked",
+              "fullTitle": "Assignment 1: Comprehensive Error Detection & Validation Suite TEST 5: Should detect error and redirect to Step 4 if Terms & Conditions are not checked",
+              "timedOut": null,
+              "duration": 1120,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.visit('http://localhost:3000/index.html');\n// Fill Step 1\ncy.get('[data-cy=\"input-first-name\"]').type('Sarah');\ncy.get('[data-cy=\"input-last-name\"]').type('Connor');\ncy.get('[data-cy=\"input-email\"]').type('sarah.connor@nexcorp.com');\ncy.get('[data-cy=\"btn-next-1\"]').click();\n// Fill Step 2\ncy.get('[data-cy=\"input-password\"]').type('SecurePass123!');\ncy.get('[data-cy=\"input-confirm-password\"]').type('SecurePass123!');\ncy.get('[data-cy=\"btn-next-2\"]').click();\n// Fill Step 3\ncy.get('[data-cy=\"btn-next-3\"]').click();\n// Step 4: Leave terms unchecked!\ncy.get('[data-cy=\"checkbox-terms\"]').should('not.be.checked');\ncy.get('[data-cy=\"btn-next-4\"]').click();\n// Step 5: Submit\ncy.get('[data-cy=\"btn-submit-final\"]').click();\n// ASSERTIONS:\n// 1. System must redirect back to Step 4 for missing terms\ncy.get('[data-cy=\"page-title-4\"]').should('be.visible');\n// 2. Global status box displays validation failure\ncy.get('[data-cy=\"api-result-box\"]').should('be.visible').and('have.class', 'failure').and('contain.text', 'Validation Error');",
+              "err": {},
+              "uuid": "63337355-bbba-4c46-ae23-031d6170233f",
+              "parentUUID": "0bd9d791-98f4-4fa5-bf91-039fcf104394",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "TEST 6: Should detect submission network failure and display \"Failed to fetch\" error",
+              "fullTitle": "Assignment 1: Comprehensive Error Detection & Validation Suite TEST 6: Should detect submission network failure and display \"Failed to fetch\" error",
+              "timedOut": null,
+              "duration": 1527,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "// Mock a network failure when submitting to the backend API\ncy.intercept('POST', '/api/register', {\n  forceNetworkError: true\n}).as('networkCrash');\ncy.visit('http://localhost:3000/index.html');\n// Fill all required fields correctly\ncy.get('[data-cy=\"input-first-name\"]').type('Sarah');\ncy.get('[data-cy=\"input-last-name\"]').type('Connor');\ncy.get('[data-cy=\"input-email\"]').type('sarah.connor@nexcorp.com');\ncy.get('[data-cy=\"btn-next-1\"]').click();\ncy.get('[data-cy=\"input-password\"]').type('SecurePass123!');\ncy.get('[data-cy=\"input-confirm-password\"]').type('SecurePass123!');\ncy.get('[data-cy=\"btn-next-2\"]').click();\ncy.get('[data-cy=\"btn-next-3\"]').click();\ncy.get('[data-cy=\"checkbox-terms\"]').check();\ncy.get('[data-cy=\"btn-next-4\"]').click();\n// Click Final Submit\ncy.get('[data-cy=\"btn-submit-final\"]').click();\n// ASSERTIONS:\n// 1. Verify the network intercept captured the failure\ncy.wait('@networkCrash');\n// 2. Result box must be visible with failure styling and exact error message\ncy.get('[data-cy=\"api-result-box\"]').should('be.visible').and('have.class', 'failure').and('contain.text', 'Submission failed: Failed to fetch');",
+              "err": {},
+              "uuid": "7e351d97-3604-483e-ac06-36d6ed675e48",
+              "parentUUID": "0bd9d791-98f4-4fa5-bf91-039fcf104394",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "TEST 7: Should detect authentication errors on empty or invalid login credentials",
+              "fullTitle": "Assignment 1: Comprehensive Error Detection & Validation Suite TEST 7: Should detect authentication errors on empty or invalid login credentials",
+              "timedOut": null,
+              "duration": 673,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.visit('http://localhost:3000/login.html');\n// Scenario A: Click login with empty fields\ncy.get('[data-cy=\"btn-login\"]').click();\ncy.get('[data-cy=\"login-message\"]').should('be.visible').and('have.class', 'error').and('contain.text', 'enter both corporate email and password');\n// Scenario B: Enter incorrect credentials\ncy.get('[data-cy=\"input-login-email\"]').type('nonexistent.user@nexcorp.com');\ncy.get('[data-cy=\"input-login-password\"]').type('WrongPassword999!');\ncy.get('[data-cy=\"btn-login\"]').click();\ncy.get('[data-cy=\"login-message\"]').should('be.visible').and('have.class', 'error').and('contain.text', 'incorrect');",
+              "err": {},
+              "uuid": "8f4ad0b4-fc04-4c49-9070-9b1f822d8f02",
+              "parentUUID": "0bd9d791-98f4-4fa5-bf91-039fcf104394",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "7d6d8932-3404-4265-afd0-6524b8cbc811",
+            "c8dcb939-4133-4b45-b580-6c5183d70f89",
+            "58540506-8340-4ab7-9607-03a401aedeb9",
+            "62e4373c-bcb2-462b-9bff-4da9b5029420",
+            "63337355-bbba-4c46-ae23-031d6170233f",
+            "7e351d97-3604-483e-ac06-36d6ed675e48",
+            "8f4ad0b4-fc04-4c49-9070-9b1f822d8f02"
+          ],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 9450,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "7.2.0"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": true,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "8.1.1"
+    },
+    "marge": {
+      "options": {
+        "reportDir": "cypress/reports",
+        "overwrite": false,
+        "html": true,
+        "json": true,
+        "charts": true,
+        "reportPageTitle": "Assignment 1 - Cypress Test Report"
+      },
+      "version": "6.3.2"
+    }
+  }
+}
