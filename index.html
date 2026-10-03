@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexCorp Portal - Company Employee Registration</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="modern.css">
+
+    <!-- Authentication guard: users must log in before accessing the registration form -->
+    <script>
+        if (!sessionStorage.getItem('currentUser') && !localStorage.getItem('currentUser')) {
+            window.location.replace('login.html');
+        }
+    </script>
+</head>
+
+<body>
+
+    <nav class="site-nav">
+        <a class="brand" href="home.html">NexCorp HR Portal</a>
+        <div class="links">
+            <a href="home.html">Home</a>
+            <a href="index.html" data-cy="nav-application" class="cta">Register Employee</a>
+            <a href="directory.html">Employee Directory</a>
+            <span id="navUserBadge" style="color: #5eead4; font-size: 13px; align-self: center; margin-left: 8px; font-weight: 600;"></span>
+            <button type="button" onclick="logout()" style="background: rgba(255,255,255,0.12); color: #fff; border: 1px solid rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 999px; font-size: 13px; cursor: pointer; font-weight: 500;">
+                Sign out
+            </button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Form Header -->
+        <div style="margin-bottom: 24px; border-bottom: 1px solid var(--line); padding-bottom: 16px;">
+            <span class="badge-pill">Onboarding Pipeline</span>
+            <h1 style="margin: 8px 0 4px; font-size: 24px; color: var(--ink);">Company Employee Onboarding Form</h1>
+            <p style="margin: 0; color: var(--muted); font-size: 14px;">Complete the 5-step registration to onboard the employee into NexCorp personnel database.</p>
+        </div>
+
+        <!-- Step Navigation Buttons -->
+        <div class="nav-buttons">
+            <button type="button" onclick="navigateToStep(1)" data-step-target="1" class="step-active">1. Personal</button>
+            <button type="button" onclick="navigateToStep(2)" data-step-target="2">2. Security</button>
+            <button type="button" onclick="navigateToStep(3)" data-step-target="3">3. Address</button>
+            <button type="button" onclick="navigateToStep(4)" data-step-target="4">4. Role & Profile</button>
+            <button type="button" onclick="navigateToStep(5)" data-step-target="5">5. Review</button>
+        </div>
+
+        <form id="registrationForm" novalidate>
+            <!-- STEP 1 CONTAINER (Active by default) -->
+            <div id="step-1" class="step-content active">
+                <h2 data-cy="page-title-1">1. Personal Information</h2>
+                <p style="margin-top: -12px; margin-bottom: 16px; font-size: 13px; color: var(--muted);">Employee legal identification, contact, and demographic details.</p>
+
+                <label for="firstName">First Name *</label>
+                <input type="text" id="firstName" data-cy="input-first-name" placeholder="e.g. Sarah">
+                <span class="error-text" data-cy="err-first-name">First name is required and cannot contain numbers.</span>
+
+                <label for="middleName">Middle Name</label>
+                <input type="text" id="middleName" data-cy="input-middle-name" placeholder="e.g. Louise">
+
+                <label for="lastName">Last Name *</label>
+                <input type="text" id="lastName" data-cy="input-last-name" placeholder="e.g. Connor">
+                <span class="error-text" data-cy="err-last-name">Last name is required and cannot contain numbers.</span>
+
+                <label for="email">Corporate Work Email *</label>
+                <input type="email" id="email" data-cy="input-email" placeholder="e.g. sarah.connor@nexcorp.internal">
+                <span class="error-text" data-cy="err-email">Valid corporate email is required.</span>
+
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" data-cy="input-phone" placeholder="e.g. +1 555-0192">
+
+                <label for="dob">Date of Birth</label>
+                <input type="date" id="dob" data-cy="input-dob">
+
+                <label>Gender</label>
+                <div style="display: flex; gap: 16px; margin-top: 6px;">
+                    <label style="margin: 0; font-weight: normal; display: flex; align-items: center; cursor: pointer;">
+                        <input type="radio" name="gender" value="male" data-cy="input-gender-male"> Male
+                    </label>
+                    <label style="margin: 0; font-weight: normal; display: flex; align-items: center; cursor: pointer;">
+                        <input type="radio" name="gender" value="female" data-cy="input-gender-female"> Female
+                    </label>
+                </div>
+
+                <label for="nationality">Nationality</label>
+                <select id="nationality" data-cy="select-nationality">
+                    <option value="">Select Nationality</option>
+                    <option value="US">United States</option>
+                    <option value="CA">Canada</option>
+                    <option value="UK">United Kingdom</option>
+                </select>
+
+                <label for="nationalId">National ID / Government ID</label>
+                <input type="text" id="nationalId" data-cy="input-national-id" placeholder="e.g. ID-8839201">
+
+                <button type="button" data-cy="btn-next-1" onclick="navigateToStep(2)">Next: Account Security &rarr;</button>
+            </div>
+
+            <!-- STEP 2 CONTAINER -->
+            <div id="step-2" class="step-content">
+                <h2 data-cy="page-title-2">2. Corporate Credentials & Security</h2>
+                <p style="margin-top: -12px; margin-bottom: 16px; font-size: 13px; color: var(--muted);">Internal corporate login, access passwords, and Two-Factor Authentication.</p>
+
+                <label for="username">Corporate Username</label>
+                <input type="text" id="username" data-cy="input-username" placeholder="e.g. sconnor90">
+
+                <label for="password">System Password *</label>
+                <input type="password" id="password" data-cy="input-password" placeholder="Create a secure employee password">
+
+                <label for="confirmPassword">Confirm Password *</label>
+                <input type="password" id="confirmPassword" data-cy="input-confirm-password" placeholder="Confirm employee password">
+                <span class="error-text" data-cy="err-confirm-password">Passwords must match and cannot be empty.</span>
+
+                <label for="securityQuestion">Security Verification Question</label>
+                <select id="securityQuestion" data-cy="select-security-question">
+                    <option value="">Select Question</option>
+                    <option value="pet">What was the name of your first pet?</option>
+                    <option value="city">In what city were you born?</option>
+                </select>
+
+                <label for="securityAnswer">Security Question Answer</label>
+                <input type="text" id="securityAnswer" data-cy="input-security-answer" placeholder="Enter answer">
+
+                <label style="display: flex; align-items: center; gap: 8px; margin-top: 18px; cursor: pointer;">
+                    <input type="checkbox" id="enable2FA" data-cy="checkbox-2fa"> Enable Two-Factor Authentication (2FA)
+                </label>
+
+                <div style="display: flex; gap: 12px; margin-top: 24px;">
+                    <button type="button" class="btn-secondary" onclick="navigateToStep(1)" style="flex: 1;">&larr; Back</button>
+                    <button type="button" data-cy="btn-next-2" onclick="navigateToStep(3)" style="flex: 2;">Next: Address Details &rarr;</button>
+                </div>
+            </div>
+
+            <!-- STEP 3 CONTAINER -->
+            <div id="step-3" class="step-content">
+                <h2 data-cy="page-title-3">3. Residential & Work Address</h2>
+                <p style="margin-top: -12px; margin-bottom: 16px; font-size: 13px; color: var(--muted);">Employee physical location for payroll taxation, logistics, and company records.</p>
+
+                <label for="street1">Street Line 1</label>
+                <input type="text" id="street1" data-cy="input-street1" placeholder="e.g. 742 Evergreen Terrace">
+
+                <label for="street2">Street Line 2</label>
+                <input type="text" id="street2" data-cy="input-street2" data-cy-alt="input-stareet2" placeholder="e.g. Apt 4B or Suite 200">
+
+                <label for="city">City</label>
+                <input type="text" id="city" data-cy="input-city" placeholder="e.g. Springfield">
+
+                <label for="state">State / Province</label>
+                <input type="text" id="state" data-cy="input-state" placeholder="e.g. OR">
+
+                <label for="postalCode">Postal Code / ZIP</label>
+                <input type="text" id="postalCode" data-cy="input-postal-code" placeholder="e.g. 97477">
+
+                <label for="country">Country</label>
+                <select id="country" data-cy="select-country">
+                    <option value="">Select Country</option>
+                    <option value="US">United States</option>
+                    <option value="CA">Canada</option>
+                    <option value="UK">United Kingdom</option>
+                </select>
+
+                <div style="display: flex; gap: 12px; margin-top: 24px;">
+                    <button type="button" class="btn-secondary" onclick="navigateToStep(2)" style="flex: 1;">&larr; Back</button>
+                    <button type="button" data-cy="btn-next-3" onclick="navigateToStep(4)" style="flex: 2;">Next: Employment Profile &rarr;</button>
+                </div>
+            </div>
+
+            <!-- STEP 4 CONTAINER -->
+            <div id="step-4" class="step-content">
+                <h2 data-cy="page-title-4">4. Employment & Professional Profile</h2>
+                <p style="margin-top: -12px; margin-bottom: 16px; font-size: 13px; color: var(--muted);">Job title, department, professional background, and compensation package.</p>
+
+                <label for="occupation">Position / Occupation Title</label>
+                <input type="text" id="occupation" data-cy="input-occupation" placeholder="e.g. Lead Security Engineer">
+
+                <label for="company">Company / Division</label>
+                <input type="text" id="company" data-cy="input-company" placeholder="e.g. NexCorp Systems" value="NexCorp Systems">
+
+                <label for="experience">Years of Professional Experience</label>
+                <input type="number" id="experience" data-cy="input-experience" placeholder="e.g. 8" min="0" max="60">
+
+                <label for="annualIncome">Annual Salary / Compensation</label>
+                <input type="number" id="annualIncome" data-cy="input-annual-income" placeholder="e.g. 125000">
+
+                <label for="preferredCurrency">Preferred Currency</label>
+                <select id="preferredCurrency" data-cy="select-currency">
+                    <option value="USD">USD ($)</option>
+                    <option value="EUR">EUR (€)</option>
+                    <option value="GBP">GBP (£)</option>
+                </select>
+
+                <label for="techSkillLevel">Technical Proficiency Rating (1 - 10)</label>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <input type="range" id="techSkillLevel" min="1" max="10" value="7" data-cy="input-range-skill" oninput="document.getElementById('skillVal').textContent = this.value">
+                    <span id="skillVal" style="font-weight: 700; color: var(--accent); min-width: 24px;">7</span>
+                </div>
+
+                <!-- Hidden Theme preference -->
+                <input type="hidden" id="preferredTheme" value="dark">
+
+                <label for="bio">Employee Background & Short Bio</label>
+                <textarea id="bio" data-cy="textarea-bio" placeholder="Brief summary of skills, certifications, and responsibilities..."></textarea>
+
+                <label style="display: flex; align-items: flex-start; gap: 8px; margin-top: 18px; cursor: pointer;">
+                    <input type="checkbox" id="terms" data-cy="checkbox-terms" style="margin-top: 3px;">
+                    <span>I confirm employee identity verification and accept Company Employment Terms & Code of Conduct *</span>
+                </label>
+
+                <div style="display: flex; gap: 12px; margin-top: 24px;">
+                    <button type="button" class="btn-secondary" onclick="navigateToStep(3)" style="flex: 1;">&larr; Back</button>
+                    <button type="button" data-cy="btn-next-4" onclick="navigateToStep(5)" style="flex: 2;">Next: Review & Confirm &rarr;</button>
+                </div>
+            </div>
+
+            <!-- STEP 5 CONTAINER -->
+            <div id="step-5" class="step-content">
+                <h2 data-cy="page-title-5">5. Review & Submit Onboarding</h2>
+                <p style="margin-top: -12px; margin-bottom: 16px; font-size: 13px; color: var(--muted);">Review the key employee onboarding summary before persisting to company database.</p>
+
+                <div class="summary-box">
+                    <p><strong>Employee Name:</strong> <span data-cy="summary-first-name"></span></p>
+                    <p><strong>Work Email:</strong> <span data-cy="summary-email"></span></p>
+                    <p><strong>Two-Factor Auth Enabled:</strong> <span data-cy="summary-2fa"></span></p>
+                    <p><strong>Role / Title:</strong> <span id="summaryOccupation">N/A</span></p>
+                    <p><strong>Location:</strong> <span id="summaryLocation">N/A</span></p>
+                </div>
+
+                <div style="display: flex; gap: 12px; margin-top: 24px;">
+                    <button type="button" class="btn-secondary" onclick="navigateToStep(4)" style="flex: 1;">&larr; Edit Details</button>
+                    <button type="submit" id="submitBtn" data-cy="btn-submit-final" style="flex: 2; margin-top: 0;">Submit Application</button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Status / Success Message Box -->
+        <div id="status-message" data-cy="api-result-box" style="display: none;"></div>
+
+        <!-- Post-submission navigation actions -->
+        <div id="postSubmitActions" style="display: none; margin-top: 18px; text-align: center; gap: 12px; justify-content: center;">
+            <a href="directory.html" class="btn-primary" style="display: inline-block; font-size: 13px; padding: 10px 18px; text-decoration: none;">
+                👥 View in Employee Directory &rarr;
+            </a>
+            <button type="button" onclick="location.reload()" class="btn-secondary" style="font-size: 13px; padding: 10px 16px;">
+                ➕ Register Another Employee
+            </button>
+        </div>
+    </div>
+
+    <script src="router.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Support cypress selector variation input-stareet2 if accessed in tests
+        const street2Input = document.getElementById('street2');
+        if (street2Input) {
+            street2Input.setAttribute('data-cy-alt', 'input-stareet2');
+        }
+
+        // Set logged in user email in navbar
+        const currentEmail = sessionStorage.getItem('currentUser') || localStorage.getItem('currentUser');
+        if (currentEmail) {
+            document.getElementById('navUserBadge').textContent = '👤 ' + currentEmail;
+        }
+    </script>
+</body>
+
+</html>

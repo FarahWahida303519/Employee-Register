@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexCorp Portal - HR Staff Log in</title>
+    <link rel="stylesheet" href="modern.css">
+</head>
+
+<body>
+    <nav class="site-nav">
+        <a class="brand" href="home.html">NexCorp HR Portal</a>
+        <div class="links">
+            <a href="home.html">Home</a>
+            <a href="index.html" data-cy="nav-application">Register Employee</a>
+            <a href="directory.html">Employee Directory</a>
+            <a href="login.html" data-cy="nav-login" class="cta">Log in</a>
+            <a href="signup.html" data-cy="nav-signup">Sign up</a>
+        </div>
+    </nav>
+
+    <main class="auth-wrap">
+        <aside class="auth-aside">
+            <h2>NexCorp Workforce Management</h2>
+            <p>Authorized HR personnel portal for registering and managing company employees.</p>
+            <ul>
+                <li>Seamless 5-step employee onboarding pipeline</li>
+                <li>Live corporate directory & employee dossier view</li>
+                <li>Real-time department & workforce analytics</li>
+                <li>One-click CSV payroll & staff records export</li>
+            </ul>
+        </aside>
+        <div class="auth-panel">
+            <div class="auth-card">
+                <h1 data-cy="login-title">Staff Log In</h1>
+                <p class="sub">Log in with your corporate HR credentials to manage employee records.</p>
+
+                <form id="loginForm" novalidate>
+                    <label for="loginEmail">Corporate Email</label>
+                    <input type="email" id="loginEmail" data-cy="input-login-email" autocomplete="email" placeholder="e.g. hr.admin@nexcorp.com">
+
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" data-cy="input-login-password" autocomplete="current-password" placeholder="Enter your password">
+
+                    <button type="submit" class="btn" data-cy="btn-login">Log In to Portal</button>
+                    <div id="loginMsg" class="auth-msg" data-cy="login-message" role="alert"></div>
+                </form>
+
+                <div style="margin-top: 18px; padding: 12px; background: #f0fdfa; border: 1px dashed var(--accent); border-radius: 8px; text-align: center;">
+                    <p style="margin: 0 0 8px; font-size: 13px; color: var(--accent-dark); font-weight: 600;">⚡ Quick Demo Access</p>
+                    <button type="button" id="btnDemoLogin" style="padding: 6px 14px; font-size: 13px; border: 1px solid var(--accent); border-radius: 6px; background: #fff; color: var(--accent); cursor: pointer; font-weight: 600;">
+                        Auto-fill HR Admin Credentials
+                    </button>
+                </div>
+
+                <p class="switch">Need a new staff account? <a href="signup.html" data-cy="link-to-signup">Create an account</a></p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Pre-seed default HR Admin account if users storage is uninitialized
+        (function initDefaultAccounts() {
+            var users = JSON.parse(localStorage.getItem('users') || '[]');
+            var defaultAdmin = {
+                name: 'HR Administrator',
+                email: 'hr.admin@nexcorp.com',
+                password: 'AdminPassword123!'
+            };
+            if (!users.some(function (u) { return u.email === defaultAdmin.email; })) {
+                users.push(defaultAdmin);
+                localStorage.setItem('users', JSON.stringify(users));
+            }
+        })();
+
+        // Demo login button auto-fill & submit
+        document.getElementById('btnDemoLogin').addEventListener('click', function () {
+            document.getElementById('loginEmail').value = 'hr.admin@nexcorp.com';
+            document.getElementById('loginPassword').value = 'AdminPassword123!';
+            document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+        });
+
+        // Login form submission handler
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            var email = document.getElementById('loginEmail').value.trim().toLowerCase();
+            var pw = document.getElementById('loginPassword').value;
+            var msg = document.getElementById('loginMsg');
+            var users = JSON.parse(localStorage.getItem('users') || '[]');
+            var user = users.find(function (u) { return u.email === email && u.password === pw; });
+
+            if (!email || !pw) {
+                msg.className = 'auth-msg error';
+                msg.textContent = 'Please enter both corporate email and password.';
+                return;
+            }
+
+            if (!user) {
+                msg.className = 'auth-msg error';
+                msg.textContent = 'Email or password is incorrect. (Use Demo button or Sign up).';
+                return;
+            }
+
+            // Save session to BOTH sessionStorage and localStorage to guarantee consistency
+            sessionStorage.setItem('currentUser', email);
+            localStorage.setItem('currentUser', email);
+
+            msg.className = 'auth-msg success';
+            msg.textContent = 'Credentials verified. Redirecting to Portal...';
+            setTimeout(function () {
+                window.location.href = 'home.html';
+            }, 500);
+        });
+    </script>
+</body>
+
+</html>

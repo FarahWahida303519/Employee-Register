@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexCorp Portal - Employee Directory & Personnel Management</title>
+    <link rel="stylesheet" href="modern.css">
+    <script>
+        // Authentication check: users must log in before accessing the portal
+        if (!sessionStorage.getItem('currentUser') && !localStorage.getItem('currentUser')) {
+            window.location.replace('login.html');
+        }
+    </script>
+</head>
+
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="site-nav">
+        <a class="brand" href="home.html">NexCorp HR Portal</a>
+        <div class="links">
+            <a href="home.html">Home</a>
+            <a href="index.html" data-cy="nav-application">Register Employee</a>
+            <a href="directory.html" class="cta">Employee Directory</a>
+            <span id="navUserBadge" style="color: #5eead4; font-size: 13px; align-self: center; margin-left: 8px; font-weight: 600;"></span>
+            <button type="button" onclick="logout()" style="background: rgba(255,255,255,0.12); color: #fff; border: 1px solid rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 999px; font-size: 13px; cursor: pointer; font-weight: 500;">
+                Sign out
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <div style="max-width: 1150px; margin: 32px auto; padding: 0 16px;">
+
+        <!-- Header Row -->
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px; margin-bottom: 24px;">
+            <div>
+                <span class="badge-pill">Workforce Personnel Records</span>
+                <h1 style="margin: 8px 0 4px; font-size: 28px; letter-spacing: -.02em;">Employee Directory & Roster</h1>
+                <p style="margin: 0; color: var(--muted); font-size: 15px;">Search, audit employee dossiers, manage active staff, and export company records.</p>
+            </div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button type="button" id="btnExportCSV" class="btn-secondary" style="font-size: 13px; padding: 10px 16px;">
+                    📥 Export to CSV
+                </button>
+                <a href="index.html" class="btn-primary" style="font-size: 13px; padding: 10px 18px; text-decoration: none;">
+                    ➕ Register New Employee
+                </a>
+            </div>
+        </div>
+
+        <!-- Filter & Search Toolbar -->
+        <div class="toolbar-card">
+            <div style="display: flex; flex-wrap: wrap; gap: 14px; align-items: center; justify-content: space-between;">
+                <div style="flex: 1 1 300px; position: relative;">
+                    <input type="text" id="directorySearch" placeholder="🔍 Search by name, employee ID, role, or email..." style="width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--line);">
+                </div>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <select id="departmentFilter" style="width: auto; min-width: 180px; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--line);">
+                        <option value="">All Departments</option>
+                    </select>
+
+                    <button type="button" id="btnRefresh" class="btn-secondary" style="padding: 10px 14px; font-size: 13px;">
+                        🔄 Refresh
+                    </button>
+                </div>
+            </div>
+            <div style="margin-top: 10px; font-size: 13px; color: var(--muted);" id="resultsCounter">
+                Loading employee records...
+            </div>
+        </div>
+
+        <!-- Directory Table Card -->
+        <div class="section-card" style="margin-top: 20px; padding: 0; overflow: hidden;">
+            <div style="overflow-x: auto;">
+                <table class="portal-table" id="directoryTable">
+                    <thead>
+                        <tr>
+                            <th>Badge / ID</th>
+                            <th>Employee Name</th>
+                            <th>Role & Department</th>
+                            <th>Contact Info</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                            <th style="text-align: right;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="directoryTableBody">
+                        <tr>
+                            <td colspan="7" style="text-align: center; padding: 36px; color: var(--muted);">Loading records...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Employee Profile Dossier Modal -->
+    <div id="dossierModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <span class="badge-pill" id="modalEmpId">EMP-0000</span>
+                    <h2 id="modalEmpName" style="margin: 6px 0 2px; font-size: 22px;">Employee Name</h2>
+                    <p id="modalEmpRole" style="margin: 0; color: var(--muted); font-size: 14px;">Role & Department</p>
+                </div>
+                <button type="button" class="modal-close" onclick="closeDossierModal()">&times;</button>
+            </div>
+
+            <div class="modal-body" id="modalEmpDetails">
+                <!-- Dynamically populated dossier details -->
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="closeDossierModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="router.js"></script>
+    <script>
+        let allEmployees = [];
+
+        // Set logged-in user email in navigation
+        const currentEmail = sessionStorage.getItem('currentUser') || localStorage.getItem('currentUser');
+        if (currentEmail) {
+            document.getElementById('navUserBadge').textContent = '👤 ' + currentEmail;
+        }
+
+        // Fetch all employees from server
+        function loadEmployees() {
+            fetch('/api/employees')
+                .then(res => res.json())
+                .then(data => {
+                    allEmployees = data.employees || [];
+                    populateDepartmentFilter(allEmployees);
+                    renderDirectory();
+                })
+                .catch(err => {
+                    console.error('Failed to load employees:', err);
+                    document.getElementById('directoryTableBody').innerHTML = `
+                        <tr><td colspan="7" style="text-align:center; color: var(--danger); padding: 32px;">
+                            Failed to load employees from server. Make sure the backend server is running.
+                        </td></tr>
+                    `;
+                });
+        }
+
+        // Populate department dropdown dynamically
+        function populateDepartmentFilter(employees) {
+            const select = document.getElementById('departmentFilter');
+            const currentSelected = select.value;
+            const depts = new Set();
+
+            employees.forEach(emp => {
+                const dept = emp.department || (emp.occupation ? emp.occupation.split(' ')[0] : 'General');
+                if (dept) depts.add(dept);
+            });
+
+            let html = '<option value="">All Departments</option>';
+            Array.from(depts).sort().forEach(dept => {
+                html += `<option value="${dept}" ${dept === currentSelected ? 'selected' : ''}>${dept}</option>`;
+            });
+            select.innerHTML = html;
+        }
+
+        // Render Directory Table with filter & search applied
+        function renderDirectory() {
+            const searchVal = document.getElementById('directorySearch').value.toLowerCase().trim();
+            const deptVal = document.getElementById('departmentFilter').value;
+
+            const filtered = allEmployees.filter(emp => {
+                const fullName = `${emp.firstName || ''} ${emp.middleName || ''} ${emp.lastName || ''}`.toLowerCase();
+                const empId = (emp.employeeId || emp.nationalId || `EMP-${emp.id}`).toLowerCase();
+                const role = (emp.occupation || '').toLowerCase();
+                const email = (emp.email || '').toLowerCase();
+                const dept = (emp.department || (emp.occupation ? emp.occupation.split(' ')[0] : 'General'));
+
+                const matchesSearch = !searchVal || fullName.includes(searchVal) || empId.includes(searchVal) || role.includes(searchVal) || email.includes(searchVal);
+                const matchesDept = !deptVal || dept === deptVal;
+
+                return matchesSearch && matchesDept;
+            });
+
+            document.getElementById('resultsCounter').textContent = `Showing ${filtered.length} of ${allEmployees.length} registered employees`;
+
+            const tbody = document.getElementById('directoryTableBody');
+            if (filtered.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; color: var(--muted); padding: 40px;">
+                            No employees match your search criteria.
+                            <br><br>
+                            <a href="index.html" class="btn-primary" style="font-size: 13px; padding: 8px 16px; text-decoration: none;">Register New Employee</a>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(emp => {
+                const fullName = `${emp.firstName || ''} ${emp.lastName || ''}`.trim() || 'N/A';
+                const empId = emp.employeeId || emp.nationalId || `EMP-${emp.id}`;
+                const dept = emp.department || (emp.occupation ? emp.occupation.split(' ')[0] : 'General');
+                const initials = (emp.firstName ? emp.firstName[0] : '') + (emp.lastName ? emp.lastName[0] : 'E');
+
+                return `
+                    <tr>
+                        <td><span class="id-badge">${empId}</span></td>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div class="avatar-circle">${initials.toUpperCase()}</div>
+                                <div>
+                                    <strong style="color: var(--ink);">${fullName}</strong>
+                                    <div style="font-size: 12px; color: var(--muted);">@${emp.username || 'staff'}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div><strong>${emp.occupation || 'Employee'}</strong></div>
+                            <span class="dept-badge">${dept}</span>
+                        </td>
+                        <td>
+                            <div><a href="mailto:${emp.email}" style="color: var(--accent); text-decoration: none; font-size: 13px;">${emp.email}</a></div>
+                            <div style="font-size: 12px; color: var(--muted);">${emp.phone || 'No phone'}</div>
+                        </td>
+                        <td>${emp.city ? `${emp.city}, ${emp.country || ''}` : (emp.country || 'N/A')}</td>
+                        <td><span class="status-pill status-active">${emp.status || 'Active'}</span></td>
+                        <td style="text-align: right;">
+                            <button type="button" class="btn-action" onclick="viewDossier(${emp.id})">Inspect Dossier</button>
+                            <button type="button" class="btn-action-danger" onclick="deleteEmployee(${emp.id}, '${fullName.replace(/'/g, "\\'")}')">Offboard</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Open Dossier Modal with comprehensive 30 fields
+        window.viewDossier = function(id) {
+            const emp = allEmployees.find(e => e.id === id);
+            if (!emp) return;
+
+            const empId = emp.employeeId || emp.nationalId || `EMP-${emp.id}`;
+            const fullName = `${emp.firstName || ''} ${emp.middleName ? emp.middleName + ' ' : ''}${emp.lastName || ''}`.trim();
+            const dept = emp.department || (emp.occupation ? emp.occupation.split(' ')[0] : 'General');
+
+            document.getElementById('modalEmpId').textContent = empId;
+            document.getElementById('modalEmpName').textContent = fullName;
+            document.getElementById('modalEmpRole').textContent = `${emp.occupation || 'Employee'} • ${dept} • ${emp.company || 'NexCorp'}`;
+
+            document.getElementById('modalEmpDetails').innerHTML = `
+                <div class="dossier-grid">
+                    <div class="dossier-section">
+                        <h4>1. Personal Information</h4>
+                        <div class="dossier-row"><span class="lbl">Full Name:</span><span class="val">${fullName}</span></div>
+                        <div class="dossier-row"><span class="lbl">Work Email:</span><span class="val">${emp.email || 'N/A'}</span></div>
+                        <div class="dossier-row"><span class="lbl">Phone Number:</span><span class="val">${emp.phone || 'N/A'}</span></div>
+                        <div class="dossier-row"><span class="lbl">Date of Birth:</span><span class="val">${emp.dob || 'N/A'}</span></div>
+                        <div class="dossier-row"><span class="lbl">Gender:</span><span class="val" style="text-transform: capitalize;">${emp.gender || 'N/A'}</span></div>
+                        <div class="dossier-row"><span class="lbl">Nationality:</span><span class="val">${emp.nationality || 'N/A'}</span></div>
+                        <div class="dossier-row"><span class="lbl">National / Badge ID:</span><span class="val">${emp.nationalId || 'N/A'}</span></div>
+                    </div>
+
+                    <div class="dossier-section">
+                        <h4>2. Corporate Security & Access</h4>
+                        <div class="dossier-row"><span class="lbl">Username:</span><span class="val">${emp.username || 'N/A'}</span></div>
+                        <div class="dossier-row"><span class="lbl">Two-Factor Auth:</span><span class="val">${emp.enable2FA ? '✅ Enabled' : '❌ Disabled'}</span></div>
+                        <div class="dossier-row"><span class="lbl">Security Question:</span><span class="val">${emp.securityQuestion || 'Set'}</span></div>
+                        <div class="dossier-row"><span class="lbl">Security Answer:</span><span class="val">${emp.securityAnswer ? '••••••••' : 'N/A'}</span></div>
+                    </div>
+
+                    <div class="dossier-section">
+                        <h4>3. Location & Address</h4>
+                        <div class="dossier-row"><span class="lbl">Street Address 1:</span><span class="val">${emp.street1 || 'N/A'}</span></div>
+                        <div class="dossier-row"><span class="lbl">Street Address 2:</span><span class="val">${emp.street2 || 'N/A'}</span></div>
+                        <div class="dossier-row"><span class="lbl">City:</span><span class="val">${emp.city || 'N/A'}</span></div>
+                        <div class="dossier-row"><span class="lbl">State / Province:</span><span class="val">${emp.state || 'N/A'}</span></div>
+                        <div class="dossier-row"><span class="lbl">Postal Code:</span><span class="val">${emp.postalCode || 'N/A'}</span></div>
+                        <div class="dossier-row"><span class="lbl">Country:</span><span class="val">${emp.country || 'N/A'}</span></div>
+                    </div>
+
+                    <div class="dossier-section">
+                        <h4>4. Employment & Compensation</h4>
+                        <div class="dossier-row"><span class="lbl">Position Title:</span><span class="val">${emp.occupation || 'N/A'}</span></div>
+                        <div class="dossier-row"><span class="lbl">Division / Entity:</span><span class="val">${emp.company || 'NexCorp'}</span></div>
+                        <div class="dossier-row"><span class="lbl">Experience:</span><span class="val">${emp.experience || '0'} years</span></div>
+                        <div class="dossier-row"><span class="lbl">Annual Salary:</span><span class="val">${emp.preferredCurrency || 'USD'} ${Number(emp.annualIncome || 0).toLocaleString()}</span></div>
+                        <div class="dossier-row"><span class="lbl">Technical Skill Rating:</span><span class="val">${emp.techSkillLevel || 5}/10</span></div>
+                        <div class="dossier-row"><span class="lbl">Compliance Terms:</span><span class="val">${emp.termsAccepted ? '✅ Accepted' : '❌ Pending'}</span></div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 16px; padding: 14px; background: #f8fafc; border: 1px solid var(--line); border-radius: 8px;">
+                    <div style="font-weight: 600; font-size: 13px; color: var(--muted); margin-bottom: 6px;">Professional Bio & Background</div>
+                    <div style="font-size: 14px; line-height: 1.6;">${emp.bio || 'No personal bio provided.'}</div>
+                </div>
+            `;
+
+            document.getElementById('dossierModal').style.display = 'grid';
+        };
+
+        window.closeDossierModal = function() {
+            document.getElementById('dossierModal').style.display = 'none';
+        };
+
+        // Offboard / Delete Employee
+        window.deleteEmployee = function(id, name) {
+            if (!confirm(`Are you sure you want to offboard employee "${name}"? This action removes their company database entry.`)) {
+                return;
+            }
+
+            fetch(`/api/employees/${id}`, { method: 'DELETE' })
+                .then(res => res.json())
+                .then(data => {
+                    alert(data.message || 'Employee offboarded successfully.');
+                    loadEmployees();
+                })
+                .catch(err => {
+                    alert('Error offboarding employee: ' + err.message);
+                });
+        };
+
+        // Export Entire Employee Directory to CSV
+        document.getElementById('btnExportCSV').addEventListener('click', function() {
+            if (allEmployees.length === 0) {
+                alert('No employee records available to export.');
+                return;
+            }
+
+            const headers = [
+                'Employee ID', 'First Name', 'Middle Name', 'Last Name', 'Email', 'Phone', 'Date of Birth',
+                'Gender', 'Nationality', 'National ID', 'Username', '2FA Enabled',
+                'Street 1', 'Street 2', 'City', 'State', 'Postal Code', 'Country',
+                'Occupation', 'Company', 'Experience (Years)', 'Annual Income', 'Currency',
+                'Tech Skill Level', 'Terms Accepted', 'Registered Date'
+            ];
+
+            const rows = allEmployees.map(emp => [
+                `"${emp.employeeId || emp.nationalId || 'EMP-' + emp.id}"`,
+                `"${emp.firstName || ''}"`,
+                `"${emp.middleName || ''}"`,
+                `"${emp.lastName || ''}"`,
+                `"${emp.email || ''}"`,
+                `"${emp.phone || ''}"`,
+                `"${emp.dob || ''}"`,
+                `"${emp.gender || ''}"`,
+                `"${emp.nationality || ''}"`,
+                `"${emp.nationalId || ''}"`,
+                `"${emp.username || ''}"`,
+                `"${emp.enable2FA ? 'Yes' : 'No'}"`,
+                `"${emp.street1 || ''}"`,
+                `"${emp.street2 || ''}"`,
+                `"${emp.city || ''}"`,
+                `"${emp.state || ''}"`,
+                `"${emp.postalCode || ''}"`,
+                `"${emp.country || ''}"`,
+                `"${emp.occupation || ''}"`,
+                `"${emp.company || ''}"`,
+                `"${emp.experience || 0}"`,
+                `"${emp.annualIncome || 0}"`,
+                `"${emp.preferredCurrency || 'USD'}"`,
+                `"${emp.techSkillLevel || ''}"`,
+                `"${emp.termsAccepted ? 'Yes' : 'No'}"`,
+                `"${emp.created_at || ''}"`
+            ]);
+
+            const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement('a');
+            link.setAttribute('href', encodedUri);
+            link.setAttribute('download', `NexCorp_Employee_Directory_${new Date().toISOString().slice(0, 10)}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+
+        // Event listeners for live filtering
+        document.getElementById('directorySearch').addEventListener('input', renderDirectory);
+        document.getElementById('departmentFilter').addEventListener('change', renderDirectory);
+        document.getElementById('btnRefresh').addEventListener('click', loadEmployees);
+
+        // Initial Load
+        loadEmployees();
+    </script>
+</body>
+
+</html>

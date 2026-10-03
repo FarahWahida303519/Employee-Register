@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexCorp Portal - Company Employee Management System</title>
+    <link rel="stylesheet" href="modern.css">
+    <script>
+        // Authentication check: users must log in before accessing the portal
+        if (!sessionStorage.getItem('currentUser') && !localStorage.getItem('currentUser')) {
+            window.location.replace('login.html');
+        }
+    </script>
+</head>
+
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="site-nav">
+        <a class="brand" href="home.html">NexCorp HR Portal</a>
+        <div class="links">
+            <a href="home.html" class="cta">Home</a>
+            <a href="index.html" data-cy="nav-application">Register Employee</a>
+            <a href="directory.html">Employee Directory</a>
+            <span id="navUserBadge" style="color: #5eead4; font-size: 13px; align-self: center; margin-left: 8px; font-weight: 600;"></span>
+            <button type="button" onclick="logout()" style="background: rgba(255,255,255,0.12); color: #fff; border: 1px solid rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 999px; font-size: 13px; cursor: pointer; font-weight: 500;">
+                Sign out
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div style="max-width: 1100px; margin: 32px auto; padding: 0 16px;">
+
+        <!-- Hero Section -->
+        <section class="portal-hero">
+            <div class="hero-content">
+                <span class="badge-pill">Enterprise Workforce Operations</span>
+                <h1>Company Employee Registration & Management Portal</h1>
+                <p>Welcome to the central workforce portal. Seamlessly register new team members, inspect company dossiers, track department metrics, and maintain corporate compliance.</p>
+                <div class="hero-actions">
+                    <a href="index.html" class="btn-primary" data-cy="btn-hero-register">➕ Register New Employee</a>
+                    <a href="directory.html" class="btn-secondary" data-cy="btn-hero-directory">👥 Browse Employee Directory</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Live Statistics Counter Grid -->
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <div class="stat-info">
+                    <div class="stat-val" id="statTotalEmployees">0</div>
+                    <div class="stat-label">Total Registered Staff</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🏢</div>
+                <div class="stat-info">
+                    <div class="stat-val" id="statDepartments">0</div>
+                    <div class="stat-label">Active Departments</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⭐</div>
+                <div class="stat-info">
+                    <div class="stat-val" id="statAvgExp">0 yrs</div>
+                    <div class="stat-label">Average Experience</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🛡️</div>
+                <div class="stat-info">
+                    <div class="stat-val" id="stat2FA">0%</div>
+                    <div class="stat-label">2FA Adoption Rate</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Feature Spotlight Cards -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; margin-top: 32px;">
+            <div class="feature-box">
+                <div class="feature-icon">📝</div>
+                <h3>Standardized Onboarding</h3>
+                <p>5-step structured registration capturing identity verification, credentials, address relocation, role designation, and compliance acceptance.</p>
+                <a href="index.html" class="feature-link">Open Registration Form &rarr;</a>
+            </div>
+
+            <div class="feature-box">
+                <div class="feature-icon">🔍</div>
+                <h3>Interactive Employee Directory</h3>
+                <p>Real-time searchable personnel directory with department filters, comprehensive dossier previews, and instant CSV spreadsheet report export.</p>
+                <a href="directory.html" class="feature-link">View Employee Roster &rarr;</a>
+            </div>
+
+            <div class="feature-box">
+                <div class="feature-icon">⚡</div>
+                <h3>Quick Demo Seed Generator</h3>
+                <p>Instantly pre-populate sample employee profiles (Engineering, Security, HR, Finance) to test data workflows, search, and exports in 1 click.</p>
+                <button type="button" id="btnSeedSample" class="btn-secondary" style="margin-top: 12px; font-size: 13px; padding: 8px 14px;">
+                    🌱 Load Sample Employees
+                </button>
+            </div>
+        </div>
+
+        <!-- 5-Step Registration Pipeline Overview -->
+        <section class="section-card" style="margin-top: 36px;">
+            <h2 style="margin: 0 0 8px; font-size: 20px;">Onboarding Registration Pipeline</h2>
+            <p style="margin: 0 0 24px; color: var(--muted); font-size: 14px;">Every newly onboarded team member undergoes a verified 5-stage registration flow:</p>
+            <div class="pipeline-steps">
+                <div class="pipe-step">
+                    <div class="pipe-num">1</div>
+                    <h4>Personal Details</h4>
+                    <p>Name, contact, DOB, gender & National / Employee ID</p>
+                </div>
+                <div class="pipe-step">
+                    <div class="pipe-num">2</div>
+                    <h4>Credentials & Security</h4>
+                    <p>Company login, password policy & Two-Factor Auth</p>
+                </div>
+                <div class="pipe-step">
+                    <div class="pipe-num">3</div>
+                    <h4>Address & Location</h4>
+                    <p>Residential street, city, state, postal code & nation</p>
+                </div>
+                <div class="pipe-step">
+                    <div class="pipe-num">4</div>
+                    <h4>Role & Compensation</h4>
+                    <p>Job occupation, company, compensation & tech skill</p>
+                </div>
+                <div class="pipe-step">
+                    <div class="pipe-num">5</div>
+                    <h4>Review & Audit</h4>
+                    <p>Dossier verification and final database persistence</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recent Registered Employees Ticker -->
+        <section class="section-card" style="margin-top: 32px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+                <div>
+                    <h2 style="margin: 0; font-size: 20px;">Recent Employee Registrations</h2>
+                    <p style="margin: 4px 0 0; color: var(--muted); font-size: 14px;">Latest team members registered in the company database</p>
+                </div>
+                <a href="directory.html" class="btn-secondary" style="font-size: 13px; padding: 7px 14px;">View All in Directory</a>
+            </div>
+
+            <div id="recentEmployeesTableWrapper" style="overflow-x: auto;">
+                <table class="portal-table">
+                    <thead>
+                        <tr>
+                            <th>Employee ID</th>
+                            <th>Name</th>
+                            <th>Occupation / Title</th>
+                            <th>Department</th>
+                            <th>Work Email</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentEmployeesBody">
+                        <tr>
+                            <td colspan="6" style="text-align: center; color: var(--muted); padding: 24px;">Loading employee records...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="router.js"></script>
+    <script>
+        // Load live dashboard metrics and recent employee registrations
+        function fetchDashboardData() {
+            // 1. Fetch Stats
+            fetch('/api/stats')
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('statTotalEmployees').textContent = data.totalEmployees || '0';
+                    document.getElementById('statDepartments').textContent = data.totalDepartments || '0';
+                    document.getElementById('statAvgExp').textContent = (data.averageExperience || '0') + ' yrs';
+                    document.getElementById('stat2FA').textContent = (data.twoFactorAdoptionRate || '0') + '%';
+                })
+                .catch(err => console.error('Failed to load stats:', err));
+
+            // 2. Fetch Recent Employees
+            fetch('/api/employees')
+                .then(res => res.json())
+                .then(data => {
+                    const tbody = document.getElementById('recentEmployeesBody');
+                    const list = (data.employees || []).slice(0, 5); // top 5
+
+                    if (list.length === 0) {
+                        tbody.innerHTML = `
+                            <tr>
+                                <td colspan="6" style="text-align: center; color: var(--muted); padding: 32px;">
+                                    No registered employees yet. 
+                                    <br><br>
+                                    <a href="index.html" class="btn-primary" style="display: inline-block; font-size: 13px; padding: 8px 16px;">Register First Employee</a>
+                                    &nbsp; or click <strong>Load Sample Employees</strong> above!
+                                </td>
+                            </tr>
+                        `;
+                        return;
+                    }
+
+                    tbody.innerHTML = list.map(emp => {
+                        const fullName = `${emp.firstName || ''} ${emp.lastName || ''}`.trim() || 'N/A';
+                        const empId = emp.employeeId || emp.nationalId || `EMP-${emp.id}`;
+                        const dept = emp.department || (emp.occupation ? emp.occupation.split(' ')[0] : 'General');
+                        return `
+                            <tr>
+                                <td><span class="id-badge">${empId}</span></td>
+                                <td><strong>${fullName}</strong></td>
+                                <td>${emp.occupation || 'Staff Member'}</td>
+                                <td><span class="dept-badge">${dept}</span></td>
+                                <td><a href="mailto:${emp.email}" style="color: var(--accent); text-decoration: none;">${emp.email}</a></td>
+                                <td><span class="status-pill status-active">${emp.status || 'Active'}</span></td>
+                            </tr>
+                        `;
+                    }).join('');
+                })
+                .catch(err => {
+                    document.getElementById('recentEmployeesBody').innerHTML = `
+                        <tr><td colspan="6" style="color: var(--danger); text-align: center;">Failed to retrieve records.</td></tr>
+                    `;
+                });
+        }
+
+        // Set logged in user badge
+        const currentEmail = sessionStorage.getItem('currentUser') || localStorage.getItem('currentUser');
+        if (currentEmail) {
+            document.getElementById('navUserBadge').textContent = '👤 ' + currentEmail;
+        }
+
+        // Seed sample employees button
+        document.getElementById('btnSeedSample').addEventListener('click', function() {
+            this.disabled = true;
+            this.textContent = '🌱 Seeding...';
+            fetch('/api/seed', {
+                    method: 'POST'
+                })
+                .then(res => res.json())
+                .then(data => {
+                    alert('Sample employee records added successfully!');
+                    fetchDashboardData();
+                    this.textContent = '✓ Sample Data Loaded';
+                })
+                .catch(err => {
+                    alert('Error seeding data: ' + err.message);
+                    this.disabled = false;
+                    this.textContent = '🌱 Load Sample Employees';
+                });
+        });
+
+        // Initialize dashboard
+        fetchDashboardData();
+    </script>
+</body>
+
+</html>

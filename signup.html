@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexCorp Portal - Staff Account Registration</title>
+    <link rel="stylesheet" href="modern.css">
+</head>
+
+<body>
+    <nav class="site-nav">
+        <a class="brand" href="home.html">NexCorp HR Portal</a>
+        <div class="links">
+            <a href="home.html">Home</a>
+            <a href="index.html" data-cy="nav-application">Register Employee</a>
+            <a href="directory.html">Employee Directory</a>
+            <a href="login.html" data-cy="nav-login">Log in</a>
+            <a href="signup.html" data-cy="nav-signup" class="cta">Sign up</a>
+        </div>
+    </nav>
+
+    <main class="auth-wrap">
+        <aside class="auth-aside">
+            <h2>Join the HR Operations Team</h2>
+            <p>Create an authorized HR account to access employee onboarding, compliance tracking, and staff directories.</p>
+            <ul>
+                <li>Authorized employee data administration</li>
+                <li>Comprehensive 30-point onboarding compliance form</li>
+                <li>Exportable workforce records and directory audit</li>
+                <li>Encrypted SQLite internal database storage</li>
+            </ul>
+        </aside>
+        <div class="auth-panel">
+            <div class="auth-card">
+                <h1 data-cy="signup-title">Create Staff Account</h1>
+                <p class="sub">Register your HR staff access credentials.</p>
+
+                <form id="signupForm" novalidate>
+                    <label for="signupName">Full Name</label>
+                    <input type="text" id="signupName" data-cy="input-signup-name" autocomplete="name" placeholder="e.g. Jane Foster">
+
+                    <label for="signupEmail">Corporate Email</label>
+                    <input type="email" id="signupEmail" data-cy="input-signup-email" autocomplete="email" placeholder="e.g. jfoster@nexcorp.com">
+
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" data-cy="input-signup-password" autocomplete="new-password" placeholder="At least 6 characters">
+
+                    <label for="signupConfirm">Confirm Password</label>
+                    <input type="password" id="signupConfirm" data-cy="input-signup-confirm" autocomplete="new-password" placeholder="Re-enter password">
+
+                    <button type="submit" class="btn" data-cy="btn-signup">Create HR Account</button>
+                    <div id="signupMsg" class="auth-msg" data-cy="signup-message" role="alert"></div>
+                </form>
+
+                <p class="switch">Already have an authorized account? <a href="login.html" data-cy="link-to-login">Log in</a></p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.getElementById('signupForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            var name = document.getElementById('signupName').value.trim();
+            var email = document.getElementById('signupEmail').value.trim().toLowerCase();
+            var pw = document.getElementById('signupPassword').value;
+            var confirm = document.getElementById('signupConfirm').value;
+            var msg = document.getElementById('signupMsg');
+
+            function fail(text) {
+                msg.className = 'auth-msg error';
+                msg.textContent = text;
+            }
+
+            if (!name) return fail('Full name is required.');
+            if (!/^\S+@\S+\.\S+$/.test(email)) return fail('Enter a valid corporate email address.');
+            if (pw.length < 6) return fail('Password must be at least 6 characters.');
+            if (pw !== confirm) return fail('Passwords do not match.');
+
+            var users = JSON.parse(localStorage.getItem('users') || '[]');
+            if (users.some(function (u) { return u.email === email; })) {
+                return fail('An account with this email already exists.');
+            }
+
+            users.push({ name: name, email: email, password: pw });
+            localStorage.setItem('users', JSON.stringify(users));
+
+            msg.className = 'auth-msg success';
+            msg.textContent = 'Account created successfully! Redirecting to Log In...';
+            setTimeout(function () {
+                window.location.href = 'login.html';
+            }, 700);
+        });
+    </script>
+</body>
+
+</html>
